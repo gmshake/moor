@@ -2,6 +2,7 @@ package tk.blizz.moor.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -26,8 +27,13 @@ public abstract class ClassLoaderTest {
 	protected ClassLoader system = ClassLoader.getSystemClassLoader();
 
 	protected void testAll() {
-		testLoad();
-		testLoad(this.getClass().getName());
+
+		assertSame(testLoadSameClass(system, loader, "java.lang.Object"), null);
+
+		assertSame(
+				testLoadSameClass(system, loader, this.getClass().getName()),
+				system);
+
 		testGetResource("java/lang/Object.class");
 		testGetResource(this.getClass().getName().replace('.', '/')
 				.concat(".class"));
@@ -36,32 +42,13 @@ public abstract class ClassLoaderTest {
 				.concat(".class"));
 	}
 
-	/**
-	 * test load java.lang.Object
-	 * 
-	 */
-	protected void testLoad() {
+	protected ClassLoader testLoadSameClass(ClassLoader loader1,
+			ClassLoader loader2, String name) {
 		Class<?> ObjectClass1 = null;
 		Class<?> ObjectClass2 = null;
 		try {
-			ObjectClass1 = loader.loadClass("java.lang.Object");
-			ObjectClass2 = system.loadClass("java.lang.Object");
-		} catch (ClassNotFoundException e) {
-			fail("Object class not found");
-		}
-
-		assertNotNull(ObjectClass1);
-		assertNotNull(ObjectClass2);
-		assertSame(ObjectClass1, ObjectClass2);
-		assertSame(ObjectClass1.getClassLoader(), null);
-	}
-
-	protected void testLoad(String name) {
-		Class<?> ObjectClass1 = null;
-		Class<?> ObjectClass2 = null;
-		try {
-			ObjectClass1 = loader.loadClass(name);
-			ObjectClass2 = system.loadClass(name);
+			ObjectClass1 = loader1.loadClass(name);
+			ObjectClass2 = loader2.loadClass(name);
 		} catch (ClassNotFoundException e) {
 			fail("class " + name + " not found");
 		}
@@ -69,7 +56,24 @@ public abstract class ClassLoaderTest {
 		assertNotNull(ObjectClass1);
 		assertNotNull(ObjectClass2);
 		assertSame(ObjectClass1, ObjectClass2);
-		assertSame(ObjectClass1.getClassLoader(), system);
+		return ObjectClass1.getClassLoader();
+	}
+
+	protected ClassLoader testLoadDifferentClass(ClassLoader loader1,
+			ClassLoader loader2, String name) {
+		Class<?> ObjectClass1 = null;
+		Class<?> ObjectClass2 = null;
+		try {
+			ObjectClass1 = loader1.loadClass(name);
+			ObjectClass2 = loader2.loadClass(name);
+		} catch (ClassNotFoundException e) {
+			fail("class " + name + " not found");
+		}
+
+		assertNotNull(ObjectClass1);
+		assertNotNull(ObjectClass2);
+		assertNotSame(ObjectClass1, ObjectClass2);
+		return ObjectClass1.getClassLoader();
 	}
 
 	protected void testGetResource(String name) {

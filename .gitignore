@@ -1,0 +1,19 @@
+# Java class file
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# eclipse setting files #
+.classpath
+.project
+.settings
+
+# mvn target #
+target
+
+# Mac OS X meta file
+.DS_Store
+

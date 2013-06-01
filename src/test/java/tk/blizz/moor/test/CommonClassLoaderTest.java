@@ -21,10 +21,12 @@ public class CommonClassLoaderTest extends ClassLoaderTest {
 		loader = new CommonClassLoader(new URL[] {});
 		super.testAll();
 
-		loader = new CommonClassLoader(new URL[] {}, null, false);
+
+		loader = new CommonClassLoader(new URL[] {}, null, true);
 		super.testAll();
 
-		loader = new CommonClassLoader(new URL[] {}, loader, false);
+		loader = new CommonClassLoader(new URL[] {}, loader, true);
+
 		super.testAll();
 
 		try {

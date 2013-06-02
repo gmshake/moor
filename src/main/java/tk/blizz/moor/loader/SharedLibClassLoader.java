@@ -36,6 +36,11 @@ public class SharedLibClassLoader extends CommonClassLoader {
 		this.classpath = new HashSet<String>();
 	}
 
+	@Override
+	public Class<?> loadClass(String name) throws ClassNotFoundException {
+		return super.loadClass(name);
+	}
+
 	public void addClassPath(String path) {
 		if (path == null || path.isEmpty())
 			return;

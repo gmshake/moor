@@ -48,6 +48,11 @@ public class CommonClassLoader extends URLClassLoader {
 	}
 
 	@Override
+	public Class<?> loadClass(String name) throws ClassNotFoundException {
+		return loadClass(name, false);
+	}
+
+	@Override
 	protected synchronized Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
 		// First, check if the class has already been loaded
@@ -93,6 +98,11 @@ public class CommonClassLoader extends URLClassLoader {
 			resolveClass(c);
 		}
 		return c;
+	}
+
+	@Override
+	protected Class<?> findClass(String name) throws ClassNotFoundException {
+		return super.findClass(name);
 	}
 
 	@Override

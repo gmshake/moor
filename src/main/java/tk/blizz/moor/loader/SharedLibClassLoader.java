@@ -1,6 +1,7 @@
 package tk.blizz.moor.loader;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -45,6 +46,21 @@ public class SharedLibClassLoader extends CommonClassLoader {
 				File file = new File(s);
 				if (file.isDirectory()) {
 					addURL(file.toURI().toURL());
+					for (File f : file.listFiles(new FilenameFilter() {
+						@Override
+						public boolean accept(File dir, String name) {
+							if (name.endsWith(".jar"))
+								return true;
+							else
+								return false;
+						}
+					})) {
+						if (f.isFile())
+							addURL(new URL("jar", "", f.toURI().toURL()
+									.toExternalForm()
+									+ "!/"));
+					}
+
 				} else if (file.isFile()
 						&& file.getAbsolutePath().endsWith(".jar")) {
 					addURL(new URL("jar", "", file.toURI().toURL()

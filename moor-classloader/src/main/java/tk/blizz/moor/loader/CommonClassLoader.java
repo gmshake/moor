@@ -3,7 +3,10 @@ package tk.blizz.moor.loader;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * This loader defaults to the 2.3 servlet spec behaviour where non system
@@ -120,20 +123,64 @@ public class CommonClassLoader extends URLClassLoader {
 
 	@Override
 	public Enumeration<URL> getResources(String name) throws IOException {
-		Enumeration<URL> e = getSystemResources(name);
+		final ArrayList<Enumeration<URL>> list = new ArrayList<Enumeration<URL>>(
+				3);
 
-		if (e == null && parent != system && parentFirst) {
-			e = parent.getResources(name);
+		list.add(getSystemResources(name));
+
+		if (parent != system && parentFirst) {
+			list.add(parent.getResources(name));
 		}
 
-		if (e == null) {
-			e = findResources(name);
+		list.add(findResources(name));
+
+		if (parent != system && !parentFirst) {
+			list.add(parent.getResources(name));
 		}
 
-		if (e == null && parent != system && !parentFirst) {
-			e = parent.getResources(name);
-		}
-		return e;
+		return new Enumeration<URL>() {
+			private final Iterator<Enumeration<URL>> it = list.iterator();
+			private Enumeration<URL> em = null;
+			private URL url = null;
+
+			private boolean next() {
+				if (url != null) {
+					return true;
+				}
+
+				try {
+					do {
+						if (em == null) {
+							em = it.next();
+						}
+
+						try {
+							url = em.nextElement();
+						} catch (NoSuchElementException e1) {
+							em = null;
+						}
+					} while (url == null);
+				} catch (NoSuchElementException e2) {
+				}
+				return url != null;
+			}
+
+			@Override
+			public boolean hasMoreElements() {
+				return next();
+			}
+
+			@Override
+			public URL nextElement() {
+				if (!next()) {
+					throw new NoSuchElementException();
+				}
+				URL u = url;
+				url = null;
+				return u;
+			}
+
+		};
 	}
 
 	/**

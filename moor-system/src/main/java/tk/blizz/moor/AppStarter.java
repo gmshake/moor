@@ -3,15 +3,27 @@ package tk.blizz.moor;
 import org.apache.log4j.Logger;
 
 import tk.blizz.moor.loader.AppClassLoader;
+import tk.blizz.moor.loader.SharedLibClassLoader;
 
 public class AppStarter implements Runnable {
 	private static final Logger log = Logger.getLogger(AppStarter.class);
 
 	@Override
 	public void run() {
-		AppClassLoader app1 = new AppClassLoader("/tmp/moor/apps/app1/");
-		AppClassLoader app2 = new AppClassLoader("/tmp/moor/apps/app2/");
-		AppClassLoader app3 = new AppClassLoader("/tmp/moor/apps/app3/");
+		log.info("start...");
+
+		SharedLibClassLoader sharedLib = new SharedLibClassLoader(
+				"/tmp/moor/lib/", ClassLoader.getSystemClassLoader());
+
+		AppClassLoader app1 = new AppClassLoader("/tmp/moor/apps/app1/",
+				sharedLib);
+		AppClassLoader app2 = new AppClassLoader("/tmp/moor/apps/app2/",
+				sharedLib);
+		AppClassLoader app3 = new AppClassLoader("/tmp/moor/apps/app3/",
+				sharedLib);
+
+		app2.setParentLoaderPriority(false);
+		app3.setParentLoaderPriority(false);
 
 		try {
 			Thread t1 = (Thread) app1.loadClass("tk.blizz.moor.AppContainer")
@@ -40,7 +52,7 @@ public class AppStarter implements Runnable {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
-
+		log.info("exit.");
 	}
 
 }

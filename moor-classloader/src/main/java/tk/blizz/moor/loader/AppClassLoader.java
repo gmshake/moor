@@ -10,7 +10,11 @@ public class AppClassLoader extends SharedLibClassLoader {
 	}
 
 	public AppClassLoader(String path) {
-		super(path);
+		this(path, null);
+	}
+
+	public AppClassLoader(String path, ClassLoader parent) {
+		super(path, parent);
 		setParentLoaderPriority(true);
 	}
 

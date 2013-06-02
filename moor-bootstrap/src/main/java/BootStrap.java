@@ -18,7 +18,8 @@ public class BootStrap {
 			IllegalAccessException, ClassNotFoundException {
 		MoorClassLoader loader = new MoorClassLoader();
 
-		Runnable moor = (Runnable) loader.loadClass("Main").newInstance();
+		Runnable moor = (Runnable) loader.loadClass("tk.blizz.moor.Main")
+				.newInstance();
 
 		Thread boot = new Thread(new ThreadGroup("moor"), moor, "bootstrap");
 		boot.setContextClassLoader(loader);

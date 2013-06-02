@@ -101,11 +101,6 @@ public class CommonClassLoader extends URLClassLoader {
 	}
 
 	@Override
-	protected Class<?> findClass(String name) throws ClassNotFoundException {
-		return super.findClass(name);
-	}
-
-	@Override
 	public URL getResource(String name) {
 		URL url = getSystemResource(name);
 

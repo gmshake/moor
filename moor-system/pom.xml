@@ -5,12 +5,17 @@
     <artifactId>moor-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>moor-bootstrap</artifactId>
+  <artifactId>moor-system</artifactId>
   <dependencies>
-  	<dependency>
+    <dependency>
   		<groupId>tk.blizz.moor</groupId>
   		<artifactId>moor-classloader</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.8</version>
   	</dependency>
   </dependencies>
 </project>

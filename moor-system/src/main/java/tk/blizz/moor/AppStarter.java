@@ -1,8 +1,11 @@
 package tk.blizz.moor;
 
+import org.apache.log4j.Logger;
+
 import tk.blizz.moor.loader.AppClassLoader;
 
 public class AppStarter implements Runnable {
+	private static final Logger log = Logger.getLogger(AppStarter.class);
 
 	@Override
 	public void run() {

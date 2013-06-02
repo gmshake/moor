@@ -9,6 +9,7 @@
   	<module>moor-classloader</module>
   	<module>moor-apps</module>
   	<module>moor-bootstrap</module>
+  	<module>moor-system</module>
   </modules>
   
   <properties>

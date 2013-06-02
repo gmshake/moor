@@ -7,14 +7,14 @@ public class MonitorStarter implements Runnable {
 
 	@Override
 	public void run() {
-		log.info("start...");
+		// log.info("start...");
 
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 		}
 
-		log.info("exit...");
+		// log.info("exit...");
 	}
 
 }

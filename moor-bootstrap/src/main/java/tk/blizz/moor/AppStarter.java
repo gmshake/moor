@@ -8,6 +8,7 @@ public class AppStarter implements Runnable {
 	public void run() {
 		AppClassLoader app1 = new AppClassLoader("/tmp/moor/apps/app1/");
 		AppClassLoader app2 = new AppClassLoader("/tmp/moor/apps/app2/");
+		AppClassLoader app3 = new AppClassLoader("/tmp/moor/apps/app3/");
 
 		try {
 			Thread t1 = (Thread) app1.loadClass("tk.blizz.moor.AppContainer")
@@ -16,13 +17,19 @@ public class AppStarter implements Runnable {
 			Thread t2 = (Thread) app2.loadClass("tk.blizz.moor.AppContainer")
 					.newInstance();
 
+			Thread t3 = (Thread) app3.loadClass("tk.blizz.moor.AppContainer2")
+					.newInstance();
+
 			t1.setContextClassLoader(app1);
 			t2.setContextClassLoader(app2);
+			t3.setContextClassLoader(app3);
 
 			t1.setName("app1");
 			t2.setName("app2");
+			t3.setName("app3");
 			t1.start();
 			t2.start();
+			t3.start();
 		} catch (InstantiationException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {

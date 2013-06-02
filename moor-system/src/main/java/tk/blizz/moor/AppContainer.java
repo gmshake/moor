@@ -4,11 +4,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import tk.blizz.moor.loader.AppClassLoader;
+
 public class AppContainer extends Thread {
 
 	@Override
 	public void run() {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		ClassLoader parent = Thread.currentThread().getContextClassLoader();
+		AppClassLoader loader = new AppClassLoader("/tmp/moor/apps/"
+				+ Thread.currentThread().getName() + "/", parent);
+		loader.setParentLoaderPriority(false);
 
 		String appClassName = "tk.blizz.moor.apps.App";
 		Method mainMethod;

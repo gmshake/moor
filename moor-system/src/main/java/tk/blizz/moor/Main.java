@@ -1,17 +1,50 @@
 package tk.blizz.moor;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.log4j.Logger;
+
 import tk.blizz.moor.loader.SharedLibClassLoader;
 
 public class Main implements Runnable {
 	@Override
 	public void run() {
-		SharedLibClassLoader monitor = new SharedLibClassLoader(
-				"/tmp/moor/bin/moor.jar:/tmp/moor/bin/log4j.jar",
+		final Logger log = Logger.getLogger(this.getClass());
+
+		log.info("main start...");
+		log.debug("main classloader: " + this.getClass().getClassLoader());
+
+		File moorHome = new File(System.getProperty("moor.home"));
+
+		URL[] monitorlib;
+		try {
+			monitorlib = new URL[] {
+					new File(moorHome, "/lib/system.jar").toURI().toURL(),
+					new File(moorHome, "/lib/log4j.jar").toURI().toURL(), };
+		} catch (MalformedURLException e1) {
+			throw new RuntimeException(e1);
+		}
+
+		SharedLibClassLoader monitor = new SharedLibClassLoader(monitorlib,
 				ClassLoader.getSystemClassLoader());
 
+		log.debug("setup monitor starter's classloader: " + monitor);
+
+		URL[] appslib;
+		try {
+			appslib = new URL[] {
+					new File(moorHome, "/lib/system.jar").toURI().toURL(),
+					new File(moorHome, "/lib/log4j.jar").toURI().toURL(), };
+		} catch (MalformedURLException e1) {
+			throw new RuntimeException(e1);
+		}
+
 		SharedLibClassLoader appstarterLoader = new SharedLibClassLoader(
-				"/tmp/moor/bin/moor.jar:/tmp/moor/bin/log4j.jar",
-				ClassLoader.getSystemClassLoader());
+				appslib, ClassLoader.getSystemClassLoader());
+
+		log.debug("setup app starter's classloader: " + appstarterLoader);
 
 		Runnable monitorstarter;
 		try {
@@ -27,6 +60,8 @@ public class Main implements Runnable {
 
 		Thread m = new Thread(monitorstarter, "monitor");
 		m.setContextClassLoader(monitor);
+
+		log.debug("start monitor starter ...");
 		m.start();
 
 		Runnable appstarter;
@@ -43,7 +78,11 @@ public class Main implements Runnable {
 
 		Thread t = new Thread(appstarter, "appstarter");
 		t.setContextClassLoader(appstarterLoader);
+
+		log.debug("start app starter ...");
 		t.start();
+
+		log.info("main end.");
 	}
 
 }

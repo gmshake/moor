@@ -6,7 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 
-public class MoorClassLoader extends CommonClassLoader {
+public class BootstrapClassLoader extends CommonClassLoader {
 	private static URL fileToURL(String fileName) {
 		try {
 			return new File(fileName).toURI().toURL();
@@ -15,7 +15,7 @@ public class MoorClassLoader extends CommonClassLoader {
 		}
 	}
 
-	public MoorClassLoader() {
+	public BootstrapClassLoader() {
 		super(new URL[] { fileToURL("/tmp/moor/bin/moor.jar"),
 				fileToURL("/tmp/moor/bin/log4j.jar") });
 	}

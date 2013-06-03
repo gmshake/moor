@@ -1,4 +1,4 @@
-import tk.blizz.moor.loader.MoorClassLoader;
+import tk.blizz.moor.loader.BootstrapClassLoader;
 
 /**
  * bootstrap class
@@ -16,7 +16,7 @@ public class BootStrap {
 	 */
 	public static void main(String[] args) throws InstantiationException,
 			IllegalAccessException, ClassNotFoundException {
-		MoorClassLoader loader = new MoorClassLoader();
+		BootstrapClassLoader loader = new BootstrapClassLoader();
 
 		Runnable moor = (Runnable) loader.loadClass("tk.blizz.moor.Main")
 				.newInstance();

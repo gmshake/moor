@@ -6,11 +6,20 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>moor-bootstrap</artifactId>
-  <dependencies>
-  	<dependency>
-  		<groupId>tk.blizz.moor</groupId>
-  		<artifactId>moor-classloader</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
+  <build>
+  	<plugins>
+  	<plugin>
+  		<groupId>org.apache.maven.plugins</groupId>
+  		<artifactId>maven-jar-plugin</artifactId>
+  		<version>2.4</version>
+  		<configuration>
+  			<archive>
+  				<manifest>
+  					<mainClass>BootStrap</mainClass>
+  				</manifest>
+  			</archive>
+  		</configuration>
+  	</plugin>
+  	</plugins>
+  </build>
 </project>

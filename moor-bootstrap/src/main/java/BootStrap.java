@@ -1,7 +1,9 @@
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 
 /**
  * bootstrap class
@@ -51,8 +53,24 @@ public class BootStrap {
 	}
 
 	private static class BootstrapClassLoader extends URLClassLoader {
-		private BootstrapClassLoader(URL[] urls) {
+		public BootstrapClassLoader(URL[] urls) {
 			super(urls, null);
 		}
+
+		@Override
+		public Class<?> loadClass(String name) throws ClassNotFoundException {
+			return super.loadClass(name, false);
+		}
+
+		@Override
+		public URL findResource(String name) {
+			return super.findResource(name);
+		}
+
+		@Override
+		public Enumeration<URL> findResources(String name) throws IOException {
+			return super.findResources(name);
+		}
+
 	}
 }

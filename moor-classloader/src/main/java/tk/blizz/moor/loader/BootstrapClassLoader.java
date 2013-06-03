@@ -1,28 +1,19 @@
 package tk.blizz.moor.loader;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Enumeration;
 
-public class BootstrapClassLoader extends CommonClassLoader {
-	private static URL fileToURL(String fileName) {
-		try {
-			return new File(fileName).toURI().toURL();
-		} catch (MalformedURLException e) {
-			return null;
-		}
-	}
+public class BootstrapClassLoader extends URLClassLoader {
 
-	public BootstrapClassLoader() {
-		super(new URL[] { fileToURL("/tmp/moor/bin/moor.jar"),
-				fileToURL("/tmp/moor/bin/log4j.jar") });
+	public BootstrapClassLoader(URL[] urls) {
+		super(urls, null);
 	}
 
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
-		return super.loadClass(name);
+		return super.loadClass(name, false);
 	}
 
 	@Override

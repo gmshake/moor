@@ -7,18 +7,36 @@ import java.lang.reflect.Modifier;
 import tk.blizz.moor.loader.AppClassLoader;
 
 public class AppContainer extends Thread {
+	private String appClassName;
+	private String appContextPath;
+	private boolean parentFirst = true;
+	private String[] appArgs = new String[] {};
+
+	public void setAppContextPath(String path) {
+		this.appContextPath = path;
+	}
+
+	public void setParentLoaderPriority(boolean parentFirst) {
+		this.parentFirst = parentFirst;
+	}
+
+	public void setAppClassName(String name) {
+		this.appClassName = name;
+	}
+
+	public void setAppArgs(String[] args) {
+		this.appArgs = args;
+	}
 
 	@Override
 	public void run() {
 		ClassLoader parent = Thread.currentThread().getContextClassLoader();
-		AppClassLoader loader = new AppClassLoader("/tmp/moor/apps/"
-				+ Thread.currentThread().getName() + "/", parent);
-		loader.setParentLoaderPriority(false);
+		AppClassLoader loader = new AppClassLoader(this.appContextPath, parent);
+		loader.setParentLoaderPriority(this.parentFirst);
 
-		String appClassName = "tk.blizz.moor.apps.App";
 		Method mainMethod;
 		try {
-			mainMethod = loader.loadClass(appClassName).getDeclaredMethod(
+			mainMethod = loader.loadClass(this.appClassName).getDeclaredMethod(
 					"main", String[].class);
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
@@ -31,13 +49,13 @@ public class AppContainer extends Thread {
 		int modifiers = mainMethod.getModifiers();
 		if (!(Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers))) {
 			throw new RuntimeException("The main method in class "
-					+ appClassName + " must be declared public and static.");
+					+ this.appClassName
+					+ " must be declared public and static.");
 		}
 		// Build the application args array
-		String[] appArgs = new String[] {};
 		try {
 			// invoke
-			mainMethod.invoke(null, new Object[] { appArgs });
+			mainMethod.invoke(null, new Object[] { this.appArgs });
 		} catch (IllegalArgumentException e) {
 			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {

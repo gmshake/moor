@@ -25,6 +25,7 @@ public class BootStrap {
 		String home = System.getProperty("moor.home");
 		if (home == null) {
 			home = "/tmp/moor/";
+			System.setProperty("moor.home", home);
 			System.err
 					.println("moor system property moor.home not set, use /tmp/moor");
 		}

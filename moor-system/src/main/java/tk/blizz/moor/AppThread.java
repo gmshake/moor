@@ -6,7 +6,7 @@ import java.lang.reflect.Modifier;
 
 import tk.blizz.moor.loader.AppClassLoader;
 
-public class AppContainer extends Thread {
+public class AppThread extends Thread {
 	private String appClassName;
 	private String appContextPath;
 	private boolean parentFirst = true;

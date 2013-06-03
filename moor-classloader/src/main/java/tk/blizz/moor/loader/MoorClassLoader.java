@@ -16,7 +16,8 @@ public class MoorClassLoader extends CommonClassLoader {
 	}
 
 	public MoorClassLoader() {
-		super(new URL[] { fileToURL("/tmp/moor/bin/moor.jar") });
+		super(new URL[] { fileToURL("/tmp/moor/bin/moor.jar"),
+				fileToURL("/tmp/moor/bin/log4j.jar") });
 	}
 
 	@Override

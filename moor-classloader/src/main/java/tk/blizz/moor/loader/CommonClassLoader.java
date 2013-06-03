@@ -64,15 +64,15 @@ public class CommonClassLoader extends URLClassLoader {
 		if (c == null) {
 			// always use system class loader first
 			try {
-				c = system.loadClass(name);
+				c = this.system.loadClass(name);
 			} catch (ClassNotFoundException e) {
 				ex = e;
 			}
 		}
 
-		if (c == null && parent != system && parentFirst) {
+		if (c == null && this.parent != this.system && this.parentFirst) {
 			try {
-				c = parent.loadClass(name);
+				c = this.parent.loadClass(name);
 			} catch (ClassNotFoundException e) {
 				ex = e;
 			}
@@ -86,9 +86,9 @@ public class CommonClassLoader extends URLClassLoader {
 			}
 		}
 
-		if (c == null && parent != system && !parentFirst) {
+		if (c == null && this.parent != this.system && !this.parentFirst) {
 			try {
-				c = parent.loadClass(name);
+				c = this.parent.loadClass(name);
 			} catch (ClassNotFoundException e) {
 				ex = e;
 			}
@@ -107,16 +107,16 @@ public class CommonClassLoader extends URLClassLoader {
 	public URL getResource(String name) {
 		URL url = getSystemResource(name);
 
-		if (url == null && parent != system && parentFirst) {
-			url = parent.getResource(name);
+		if (url == null && this.parent != this.system && this.parentFirst) {
+			url = this.parent.getResource(name);
 		}
 
 		if (url == null) {
 			url = findResource(name);
 		}
 
-		if (url == null && parent != system && !parentFirst) {
-			url = parent.getResource(name);
+		if (url == null && this.parent != this.system && !this.parentFirst) {
+			url = this.parent.getResource(name);
 		}
 		return url;
 	}
@@ -128,14 +128,14 @@ public class CommonClassLoader extends URLClassLoader {
 
 		list.add(getSystemResources(name));
 
-		if (parent != system && parentFirst) {
-			list.add(parent.getResources(name));
+		if (this.parent != this.system && this.parentFirst) {
+			list.add(this.parent.getResources(name));
 		}
 
 		list.add(findResources(name));
 
-		if (parent != system && !parentFirst) {
-			list.add(parent.getResources(name));
+		if (this.parent != this.system && !this.parentFirst) {
+			list.add(this.parent.getResources(name));
 		}
 
 		return new Enumeration<URL>() {
@@ -144,25 +144,25 @@ public class CommonClassLoader extends URLClassLoader {
 			private URL url = null;
 
 			private boolean next() {
-				if (url != null) {
+				if (this.url != null) {
 					return true;
 				}
 
 				try {
 					do {
-						if (em == null) {
-							em = it.next();
+						if (this.em == null) {
+							this.em = this.it.next();
 						}
 
 						try {
-							url = em.nextElement();
+							this.url = this.em.nextElement();
 						} catch (NoSuchElementException e1) {
-							em = null;
+							this.em = null;
 						}
-					} while (url == null);
+					} while (this.url == null);
 				} catch (NoSuchElementException e2) {
 				}
-				return url != null;
+				return this.url != null;
 			}
 
 			@Override
@@ -175,8 +175,8 @@ public class CommonClassLoader extends URLClassLoader {
 				if (!next()) {
 					throw new NoSuchElementException();
 				}
-				URL u = url;
-				url = null;
+				URL u = this.url;
+				this.url = null;
 				return u;
 			}
 
@@ -200,4 +200,5 @@ public class CommonClassLoader extends URLClassLoader {
 	public boolean getParentLoaderPriority() {
 		return this.parentFirst;
 	}
+
 }
